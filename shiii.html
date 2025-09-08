@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday Shi! 🎉</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      overflow: hidden;
+      text-align: center;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-top: 60px;
+      animation: pulse 2s infinite;
+    }
+
+    #message {
+      font-size: 1.5em;
+      margin-top: 20px;
+      display: none;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      background: #ff6f61;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-top: 40px;
+    }
+
+    button:hover {
+      background: #ff3b2e;
+    }
+
+    .balloon {
+      width: 60px;
+      height: 80px;
+      background-color: red;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      position: absolute;
+      bottom: -100px;
+      animation: float 10s infinite ease-in;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-120vh); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="confetti"></canvas>
+
+  <div class="content">
+    <h1>🎉 Happy Birthday, Shii! 🎂</h1>
+    <p>Click the button below for a surprise 🎁</p>
+    <button onclick="showMessage()">Unwrap Your Wish</button>
+    <p id="message">Dear Shi, may your day be filled with love, laughter, and cake! 🎈💖<br>You’re a gift to everyone who knows you. Enjoy your day to the fullest!</p>
+    <audio id="music" src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" loop></audio>
+  </div>
+
+  <script>
+    // Floating Balloons
+    function createBalloon() {
+      const balloon = document.createElement('div');
+      balloon.classList.add('balloon');
+      balloon.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      balloon.style.left = `${Math.random() * 100}%`;
+      balloon.style.animationDuration = `${6 + Math.random() * 4}s`;
+      document.body.appendChild(balloon);
+      setTimeout(() => balloon.remove(), 10000);
+    }
+    setInterval(createBalloon, 500);
+
+    // Confetti
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let confetti = [];
+    for (let i = 0; i < 300; i++) {
+      confetti.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 4 + 1,
+        d: Math.random() * 40,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+      });
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2, false);
+        ctx.fillStyle = c.color;
+        ctx.fill();
+      });
+      updateConfetti();
+    }
+
+    function updateConfetti() {
+      confetti.forEach(c => {
+        c.y += Math.cos(c.d) + 1 + c.r / 2;
+        c.x += Math.sin(c.d);
+        if (c.y > canvas.height) {
+          c.y = -10;
+          c.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    setInterval(drawConfetti, 30);
+
+    // Show message & play music
+    function showMessage() {
+      document.getElementById('message').style.display = 'block';
+      document.getElementById('music').play();
+    }
+
+    // Responsive canvas
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
